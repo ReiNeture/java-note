@@ -1,0 +1,200 @@
+============================================================================== java.util.Objects:
+
+Objects.toString(gearBox, ""); // 如果null 回傳第二個參數值
+Objects.toString(id, "");
+Optional.ofNullable(gearBox).orElse(""); // Java8 可以用Optional
+Optional.ofNullable(id).orElse("");
+bool Objects.isNull(Object obj)
+bool Objects.nonNull(Object obj)
+Objects.requireNonNull(T obj) // null throws NullException
+
+============================================================================== java.util.Optional<T> 
+
+static <T> Optional<T> empty() 
+// get empty optional
+Optional<T> filter(Predicate<? super <T> predicate) 
+// 如果值存在，並且這個值匹配給定的predicate，返回一個Optional用以描述這個值，否則返回一個空的Optional。
+T get() 
+// 如果在这个Optional中包含这个值，返回值，否则抛出异常：NoSuchElementException
+void ifPresent(Consumer<? super T> consumer) 
+// 如果值存在则使用该值调用 consumer , 否则不做任何事情。
+boolean isPresent() 
+// 如果值存在则方法会返回true，否则返回 false。
+<U>Optional<U> map(Function<? super T,? extends U> mapper) 
+// 如果有值，则对其执行调用映射函数得到返回值。如果返回值不为 null，则创建包含映射返回值的Optional作为map方法返回值，否则返回空Optional。
+static <T> Optional<T> of(T value)
+//返回一个指定非null值的Optional。
+static <T> Optional<T> ofNullable(T value)
+//如果为非空，返回 Optional 描述的指定值，否则返回空的 Optional。
+T orElse(T other)
+//如果存在该值，返回值， 否则返回 other。
+T orElseGet(Supplier<? extends T> other)
+//如果存在该值，返回值， 否则触发 other，并返回 other 调用的结果。
+<X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier)
+//如果存在该值，返回包含的值，否则抛出由 Supplier 继承的异常
+
+============================================================================== java.util.Collections:
+
+Collections.emptyList();										// 單例空List, 也有Map, Set
+Collections.list(Enumeration<T> e) 								// Enumeration to ArrayList<T>
+Collections.copy(List<? super T> dest, List<? extends T> src) // List複製所有元素
+Collections.max(Collection<? extends T> coll)				  // max 也有 min
+Collections.shuffle(List<?> list) 							// 隨機排序
+Collections.singletonMap(K key, V value) 					// 只有一個元素的單例Map 也有List Set >>JDK8適合當作Pair使用
+Collections.sort(List<T> list)								//排序
+Collections.unmodifiableList(List<? extends T> list)       // 不可修改的List,也有Map, Set
+Collections.swap(List<?> list, int i, int j)				// SWAP
+
+
+============================================================================== java.util.HashMap:
+// Absent無, Present存在
+putIfAbsent(K key, V value)  				// 如果無此KEY就PUT
+containsKey(Object key)      				// 是否存在此KEY
+getOrDefault(Object key, V defaultValue)	// 無此KEY 回傳defaultValue
+
+compute(K key, BiFunction<? super K,? super V,? extends V> remappingFunction) // 直接算
+computeIfAbsent(K key, Function<? super K,? extends V> mappingFunction) // 無此KEY 放入並計算value值
+```
+// 计算 Shirt 的值
+int shirtPrice = prices.computeIfAbsent("Shirt", key -> 280);
+System.out.println("Price of Shirt: " + shirtPrice);
+```
+
+computeIfPresent(K key, BiFunction<? super K,? super V,? extends V> remappingFunction) // 此KEY非為空 重新計算value
+```
+// 重新计算鞋加上10%的增值税后的价值
+int shoesPrice = prices.computeIfPresent("Shoes", (key, value) -> value + value * 10/100);
+System.out.println("Price of Shoes after VAT: " + shoesPrice);
+```
+
+// 走訪MAP
+map.keySet().forEach(key -> System.out.print(key)); // return Set<T>
+map.values().forEach(val -> System.out.print(val)); // return Collection
+
+============================================================================== Files and Path:
+Path source = Paths.get(szPath);
+List<String> contentList = Files.readAllLines(source, StandardCharsets.UTF_8); // 回傳每一行
+Files.move(source, source.resolveSibling(newFileName)); // 重新命名檔案在同路徑
+
+UUID.randomUUID() // get UUID
+
+============================================================================== [Java.util.function.Function: Function有一個輸入參數及一個回傳值]
+public static void main(String[] args) {
+		random r = new random();
+		int n = 100;
+		n = r.map(n, k -> k * 2);
+		System.out.println(n);
+}
+public int map(int n, Function<Integer, Integer> mapper) {
+		return mapper.andThen(k -> k + 1).apply(n);
+}
+
+============================================================================== [WHEN PEKO IS AN INTERFACE: 實作匿名類別]
+Peko p = new Peko() {
+			public void peko_noise() {
+				System.out.println("peko!");
+			}
+		};
+p.peko_noise();
+
+=== [InputStream to BufferReader]
+InputStream is = ...;
+BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+============================================================================== JQUERY
+As of jQuery 1.4 you can pass attributes to a self-closed element like so:
+
+jQuery('<div>', {
+    id: 'some-id',
+    class: 'some-class some-other-class',
+    title: 'now this div has a title!'
+	
+}).appendTo('#mySelector')
+
+Jquery to DOM Object ====
+jQuery 對像是一個類似數組的包裝器，圍繞一個或多個 DOM 元素。
+要獲得對實際 DOM 元素（而不是 jQuery 對象）的引用，您有兩種選擇。第一種（也是最快的）方法是使用數組表示法：
+
+$( "#foo" )[ 0 ];
+$("#id_BUYBACKQUERY_Edit_FORM").get(0).reset();
+$("div.headline").get()
+
+============================================================================== JSTL
+
+-> c:if check null
+	<c:if test="${not empty variable}">
+		<script>fn_close();</script>
+	</c:if>
+
+-> c:if check true	
+	<c:if test="${sV.done == true}">...</c:if>  // or
+	<c:if test="${sV.done eq true}">...</c:if>  // or
+	<c:if test="${sV.done}">...</c:if>   // or
+	
+	
+================================================================================== 設計模式
+designP:
+Ctrl web層 截獲請求 呼叫Mdl(Serv)讀寫操作 輸入資料檢核(Req) 選擇合適View並轉發
+
+Mdl  純資料物件bean
+  Serv 非web層 不能包含JavaWeb API 只關心業務邏輯處理(珍對資料作處理)
+  Dao  封裝底層資料庫操作
+  
+View 純顯示邏輯 資料由Ctrl包裝
+
+================================================================================== JDK8 Lambda:
+
+Comparator<String> byLength = new Comparator<String>() {
+	public int compare(String name1, String name2) {
+		return name1.legth() - name2.legth();
+	}
+};
+
+(String name1, String name2) -> name1.length() - name2.length()
+Comparator<String> byLength = (name1, name2) -> name1.legth() - name2.legth();
+Runnable runs = () -> { ... };
+
+
+================================================================================== front end
+
+// JS自執行函數掛載至window 隔離全域變數
+
+(function(){
+  var count=0;
+  var addOne=function(){
+    alert(count++);
+  };
+  window.outerAddOne=addOne; //掛到window上外界方可訪問
+})();
+
+(function(window,undefined){
+    ...
+})(window);
+
+addOne();
+
+// ES6前的模組樣式
+var feature = (function() {
+
+    // 私有的變數與函式
+    var privateThing = "secret"
+    var publicThing = "not secret"
+
+    var changePrivateThing = function() {
+        privateThing = "super secret"
+    };
+
+    var sayPrivateThing = function() {
+        console.log( privateThing )
+        changePrivateThing()
+    };
+
+    // 公開的API
+    return {
+        publicThing: publicThing,
+        sayPrivateThing: sayPrivateThing
+    }
+})()
+
+feature.publicThing // 公開部份的存取
+feature.sayPrivateThing() // 透過公開的API來存取私有的變數
