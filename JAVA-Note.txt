@@ -155,6 +155,44 @@ Comparator<String> byLength = (name1, name2) -> name1.legth() - name2.legth();
 Runnable runs = () -> { ... };
 
 
+Consumer： 如果需要的行為是接受一個引數，然後處理後不傳回值，就可以使用Consumer介面
+
+定義：
+	package java.util.function;
+	import java.util.Objects;
+
+	@FunctionalInterface
+	public interface Consumer<T> {
+		void accept(T t);
+		...
+	}
+
+用法：
+	Arrays.asList("Justin", "Monica", "Irene").forEach(out::println);
+	Arrays.asList("Justin", "Monica", "Irene").forEach(new Consumer<String>() { // 實作匿名介面
+		public void accept(String t) {
+			System.out.println( t.length() );
+		}
+	});
+
+
+Function： 如果需要的是接受一個引數，然後以該引數進行計算後傳回結果，就可以使用Function介面
+
+用法：
+	Optional<String> nickOptional = getNickName("Justin");
+	out.println(nickOptional.map(String::toUpperCase));  // 顯示 CATERPILLAR
+
+
+Predicate： 如果接受一個引數，然後只傳回boolean值，也就是根據傳入的引數直接論斷真假的行為，就可以使用Predicate函式介面
+
+用法：
+	long count = Stream.of(fileNames)
+					   .filter(name -> name.endsWith("txt"))
+					   .count();
+
+
+Supplier： 如果需要的行為是不接受任何引數，然後傳回值，那可以使用Supplier函式介面
+
 ================================================================================== front end
 
 // JS自執行函數掛載至window 隔離全域變數
