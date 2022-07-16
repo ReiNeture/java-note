@@ -154,6 +154,14 @@ Comparator<String> byLength = new Comparator<String>() {
 Comparator<String> byLength = (name1, name2) -> name1.legth() - name2.legth();
 Runnable runs = () -> { ... };
 
+================================================================================== java exception
+
+不直接使用 Exception, RuntimeException, Throwable, Error
+
+IllegalArgumentException(RuntimeException)      非null的參數值不正確
+IllegalStateException(RuntimeException)         表示方法已在非法或不適當的時間被調用
+NullPointerException(RuntimeException)          當應用程序在需要對象的情況下嘗試使用 null 時引發
+UnsupportedOperationException(RuntimeException) 不支持請求的操作
 
 ================================================================================== front end
 
