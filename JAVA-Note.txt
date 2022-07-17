@@ -154,15 +154,6 @@ Comparator<String> byLength = new Comparator<String>() {
 Comparator<String> byLength = (name1, name2) -> name1.legth() - name2.legth();
 Runnable runs = () -> { ... };
 
-================================================================================== java exception
-
-不直接使用 Exception, RuntimeException, Throwable, Error
-
-IllegalArgumentException(RuntimeException)      非null的參數值不正確
-IllegalStateException(RuntimeException)         表示方法已在非法或不適當的時間被調用
-NullPointerException(RuntimeException)          當應用程序在需要對象的情況下嘗試使用 null 時引發
-UnsupportedOperationException(RuntimeException) 不支持請求的操作
-
 Consumer： 如果需要的行為是接受一個引數，然後處理後不傳回值，就可以使用Consumer介面
 
 定義：
@@ -200,6 +191,15 @@ Predicate： 如果接受一個引數，然後只傳回boolean值，也就是根
 
 
 Supplier： 如果需要的行為是不接受任何引數，然後傳回值，那可以使用Supplier函式介面
+
+================================================================================== java exception
+
+不直接使用 Exception, RuntimeException, Throwable, Error
+
+IllegalArgumentException(RuntimeException)      非null的參數值不正確
+IllegalStateException(RuntimeException)         表示方法已在非法或不適當的時間被調用
+NullPointerException(RuntimeException)          當應用程序在需要對象的情況下嘗試使用 null 時引發
+UnsupportedOperationException(RuntimeException) 不支持請求的操作
 
 ================================================================================== front end
 
