@@ -1,4 +1,8 @@
-Consumer： 如果需要的行為是接受一個引數，然後處理後不傳回值，就可以使用Consumer介面
+/**
+ * 如果需要的行為是接受一個引數，然後處理後不傳回值，就可以使用Consumer介面
+ * T - the type of the input to the operation
+ */
+Interface Consumer<T>
 
 	// 創建Consumer
 	Consumer<String> consumer = new Consumer<String>() {
@@ -23,8 +27,22 @@ Consumer： 如果需要的行為是接受一個引數，然後處理後不傳�
 		System.out.println(parm);
 	});
 	
+	// 輸出 "hello, pekomiko" // Consumer<StringBuilder> java.util.function.Consumer.andThen(Consumer<? super StringBuilder> after)
+	StringBuilder bf = new StringBuilder("hello, ");
+	Consumer<StringBuilder> c1 = bf1 -> bf.append("peko");
+	Consumer<StringBuilder> c2 = bf2 -> bf.append("miko");
+	c1.andThen(c2).accept(bf);
+	System.out.println(bf);
 	
-Function： 如果需要的是接受一個引數，然後以該引數進行計算後傳回結果，就可以使用Function介面
+	
+	
+	
+/**
+ * 如果需要的是接受一個引數，然後以該引數進行計算後傳回結果，就可以使用Function介面
+ * T - the type of the input to the function
+ * R - the type of the result of the function
+ */
+Interface Function<T,R>
 
 	// 創建Function
 	Function<String, Integer> function = new Function<String, Integer>() {
@@ -50,7 +68,11 @@ Function： 如果需要的是接受一個引數，然後以該引數進行計�
 	
 	
 	
-Supplier： 如果需要的行為是不接受任何引數，然後傳回值，那可以使用Supplier函式介面
+/**
+ * 如果需要的行為是不接受任何引數，然後傳回值，那可以使用Supplier函式介面
+ * T - the type of results supplied by this supplier
+ */
+Interface Supplier<T>
 
 	// 定義
 	Supplier<Integer> supplier = new Supplier<Integer>() {
@@ -67,8 +89,11 @@ Supplier： 如果需要的行為是不接受任何引數，然後傳回值，�
 	
 	
 	
-	
-Predicate： 如果接受一個引數，然後只傳回boolean值，也就是根據傳入的引數直接論斷真假的行為，就可以使用Predicate函式介面	
+/**
+ * 如果接受一個引數，然後只傳回boolean值，也就是根據傳入的引數直接論斷真假的行為，就可以使用Predicate函式介面
+ * T - the type of the input to the predicate
+ */
+Interface Predicate<T>
 	
 	// 定義
 	Predicate<Integer> predicate = new Predicate<Integer>() {
@@ -88,3 +113,25 @@ Predicate： 如果接受一個引數，然後只傳回boolean值，也就是根
 					 .count();
 					
 	
+
+
+
+
+
+
+
+
+Interface BiConsumer<T,U> // 提供兩個自定義類型的輸入參數，不返回執行結果
+
+
+
+
+
+
+參考
+
+面试又挂了，你理解了 Java 8 的 Consumer、Supplier、Predicate和Function吗？
+https://cloud.tencent.com/developer/article/1488128
+
+[译] 一文带你玩转 Java8 Stream 流，从此操作集合 So Easy
+https://juejin.cn/post/6844903830254010381
