@@ -88,3 +88,20 @@ Person p6 = new Person(m, "Lp", 19);
 Person p3 = new Person(y, "Sky", 17);
 Person p4 = new Person(y, "Ray", 18);
 Person p7 = new Person(y, "Tea", 18);
+
+
+
+==================================================================================================================================================
+參考：
+
+Java8 Stream：2萬字20個範例，玩轉集合的篩選、歸約、分組、聚合
+https://tw511.com/a/01/22301.html#363_partitioningBygroupingBy_491
+
+java8中的Collectors.groupingBy用法 
+https://www.cnblogs.com/henuyuxiang/p/14989223.html
+
+Stream 的 reduce 與 collect
+https://openhome.cc/Gossip/Java/Reduction.html
+
+Collectors JDK API
+https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#groupingBy-java.util.function.Function-java.util.stream.Collector-
