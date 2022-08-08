@@ -106,6 +106,12 @@ BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 String.format("%104d, %1s", ints);
 %[argument_index$][flags][width][.precision]conversion
 
+Class Path 與 Build Path的差別
+Build Path：
+用於構建應用程式。Build Path包含所有的Java libraries以及source files,這些檔案會在編譯應用程式時用到。
+Classpath：
+用於執行應用程式。Classpath包括所有的Java classes 與 libraries,以來執行Java程式。是必選項,預設路徑是 . ，當java 虛擬機器無法找到使用者定義的路徑時使用預設路徑。
+
 ============================================================================== JQUERY
 As of jQuery 1.4 you can pass attributes to a self-closed element like so:
 
