@@ -1,0 +1,137 @@
+/**
+ * 如果需要的行為是接受一個引數，然後處理後不傳回值，就可以使用Consumer介面
+ * T - the type of the input to the operation
+ */
+Interface Consumer<T>
+
+	// 創建Consumer
+	Consumer<String> consumer = new Consumer<String>() {
+		@Override
+		public void accept(String s) {
+			System.out.println(s);
+		}
+	};
+	// 使用Lambda方式 創建
+	Consumer<String> consumer1 = (s) -> System.out.println(s);
+	// 使用方法引用 創建
+	Consumer consumer2 = System.out::println;
+	
+	// 直接使用
+	consumer.accept("Hello, world.");
+	
+	// 傳入Consumer // void java.util.stream.Stream.forEach(Consumer<? super String> action)
+	Stream<String> stream = Stream.of("1", "2", "3", "4", "5");
+	stream.forEach(consumer1);
+	// 使用Lambda方式 傳入Consumer
+	stream.forEach(parm -> {
+		System.out.println(parm);
+	});
+	
+	// 輸出 "hello, pekomiko" // Consumer<StringBuilder> java.util.function.Consumer.andThen(Consumer<? super StringBuilder> after)
+	StringBuilder bf = new StringBuilder("hello, ");
+	Consumer<StringBuilder> c1 = bf1 -> bf.append("peko");
+	Consumer<StringBuilder> c2 = bf2 -> bf.append("miko");
+	c1.andThen(c2).accept(bf);
+	System.out.println(bf);
+	
+	
+	
+	
+/**
+ * 如果需要的是接受一個引數，然後以該引數進行計算後傳回結果，就可以使用Function介面
+ * T - the type of the input to the function
+ * R - the type of the result of the function
+ */
+Interface Function<T,R>
+
+	// 創建Function
+	Function<String, Integer> function = new Function<String, Integer>() {
+		@Override
+			public Integer apply(String s) {
+			return s.length();
+		}
+    };
+	// 使用Lambda方式 創建
+	Function<String, Integer> function1 = (str) -> { return str.length(); }; // 有大括號就要加return
+	Function<String, Integer> function1 = (str) -> str.length(); // 單行可省略大括號, return
+	Function<String, Integer> function1 = str -> str.length(); // 單參數可省略小括號
+	
+	// 方法指定 使用
+	Stream<String> stream = Stream.of("aaa", "bbbbb", "ccccccv");
+	stream.map(String::toUpperCase);
+	// Lambda 使用
+	Stream<String> stream2 = Stream.of("12", "34", "56");
+	stream2.map(str -> {
+		return Integer.parseInt(str); // return Stream<Integer>
+	});
+	
+	
+	
+	
+/**
+ * 如果需要的行為是不接受任何引數，然後傳回值，那可以使用Supplier函式介面
+ * T - the type of results supplied by this supplier
+ */
+Interface Supplier<T>
+
+	// 定義
+	Supplier<Integer> supplier = new Supplier<Integer>() {
+		@Override
+		public Integer get() {
+			return new Random().nextInt();
+		}
+	};
+	
+	int randomNum = supplier.get();
+	Supplier<Integer> supplier2 = () -> 101;
+	Supplier<Integer> supplier3 = () -> {return 101;};
+	
+	
+	
+	
+/**
+ * 如果接受一個引數，然後只傳回boolean值，也就是根據傳入的引數直接論斷真假的行為，就可以使用Predicate函式介面
+ * T - the type of the input to the predicate
+ */
+Interface Predicate<T>
+	
+	// 定義
+	Predicate<Integer> predicate = new Predicate<Integer>() {
+		@Override
+		public boolean test(Integer integer) {
+			if(integer > 5)
+				return true;
+			return false;
+		}
+	};
+	
+	IntegerStream.range(0, 10)
+				.anyMatch(n > 5);
+	
+	long count = Stream.of(fileNames)
+					 .filter(name -> name.endsWith("txt")) // use Predicate
+					 .count();
+					
+	
+
+
+
+
+
+
+
+
+Interface BiConsumer<T,U> // 提供兩個自定義類型的輸入參數，不返回執行結果
+
+
+
+
+
+
+參考
+
+面试又挂了，你理解了 Java 8 的 Consumer、Supplier、Predicate和Function吗？
+https://cloud.tencent.com/developer/article/1488128
+
+[译] 一文带你玩转 Java8 Stream 流，从此操作集合 So Easy
+https://juejin.cn/post/6844903830254010381

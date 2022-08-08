@@ -1,0 +1,107 @@
+Collector是用於將集合資料進行規約操作的工具 Stream.collect() 會常用到
+Collectors是JDK集合了 各種常見情況的不同收集器
+
+
+==================================================================================================================================================
+Collectors API文件給的範例:
+
+// 1. 轉List
+List<String> list = people.stream().map(Person::getName).collect(Collectors.toList());
+
+// 2. 轉Set
+Set<String> set = people.stream().map(Person::getName).collect(Collectors.toCollection(TreeSet::new));
+
+// 3. 用 ", " 串起來
+String joined = things.stream()
+                   .map(Object::toString)
+                   .collect(Collectors.joining(", "));
+
+// 4. 計算員工工資總和
+int total = employees.stream()
+                   .collect(Collectors.summingInt(Employee::getSalary)));
+				  
+// 5. 按照部門分組
+Map<Department, List<Employee>> byDept
+         = employees.stream()
+                    .collect(Collectors.groupingBy(Employee::getDepartment));
+					
+// 6. 按部門計算工資總和
+Map<Department, Integer> totalByDept
+         = employees.stream()
+                    .collect(Collectors.groupingBy(Employee::getDepartment,
+                                                   Collectors.summingInt(Employee::getSalary)));
+				
+// 7. 將學生分為合格和不合格				
+Map<Boolean, List<Student>> passingFailing =
+         students.stream()
+                 .collect(Collectors.partitioningBy(s -> s.getGrade() >= PASS_THRESHOLD));
+				 
+				 
+				 
+==================================================================================================================================================
+/*** Collectors 兩個參數的groupingBy方法，downstream是用於計算value值的Collector(範例6) ***/
+static <T,K,A,D> Collector<T,?,Map<K,D>> groupingBy(Function<? super T,? extends K> classifier, Collector<? super T,A,D> downstream)
+
+// 1. 根據性別分組 Person
+Map<Person.Gender, List<Person>> males = persons.stream()
+                  .collect(
+                      groupingBy(Person::getGender));
+				 
+// 2. 根據性別分組姓名，使用mapping把收集器的结果轉換為另一種類型
+Map<Person.Gender, List<String>> males = persons.stream()
+                  .collect(
+                      groupingBy(Person::getGender,
+                      mapping(Person::getName, toList())
+				  ));
+
+// 3. 各性別總數，透過聯合其他收集器(groupingBy的第二個參數)
+Map<Person.Gender, Long> males = persons.stream()
+											  .collect(groupingBy(Person::getGender,
+														Collectors.counting()));
+
+// 4. 多重群組，先根據性別分組再依年齡分組
+Map<Gender, Map<Integer, List<Person>>> males = persons.stream()
+				  .collect(groupingBy(Person::getGender,
+						  groupingBy(Person::getAge)
+					));
+					
+/* 範例4的輸出 */
+{
+	女={
+		19=[Person.name=Lp], 
+		12=[Person.name=Lara, Person.name=Lily], 
+		15=[Person.name=Loo]
+	}, 
+	男={
+		17=[Person.name=Sky], 
+		18=[Person.name=Ray, Person.name=Tea]
+	}
+}
+
+/* 資料 */
+Gender y = new Person.Gender("男");
+Gender m = new Person.Gender("女");
+Person p1 = new Person(m, "Lara", 12);
+Person p2 = new Person(m, "Lily", 12);
+Person p5 = new Person(m, "Loo", 15);
+Person p6 = new Person(m, "Lp", 19);
+Person p3 = new Person(y, "Sky", 17);
+Person p4 = new Person(y, "Ray", 18);
+Person p7 = new Person(y, "Tea", 18);
+
+
+
+==================================================================================================================================================
+參考：
+
+Java8 Stream：2萬字20個範例，玩轉集合的篩選、歸約、分組、聚合
+https://tw511.com/a/01/22301.html#363_partitioningBygroupingBy_491
+
+java8中的Collectors.groupingBy用法 
+https://www.cnblogs.com/henuyuxiang/p/14989223.html
+
+Stream 的 reduce 與 collect
+https://openhome.cc/Gossip/Java/Reduction.html
+
+Collectors JDK API
+https://docs.oracle.com/javase/8/docs/api/java/util/stream/Collectors.html#groupingBy-java.util.function.Function-java.util.stream.Collector-
