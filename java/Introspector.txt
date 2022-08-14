@@ -1,0 +1,269 @@
+Java內省（Introspector）是Java語言對Bean類屬性、方法，事件的一種缺省處理方法。例如類Person中有屬性name,那我們可以通過getName，setName來得到其值或者設置新的值。
+註1：使用內省的Bean需要有getter、setter 且需依照JavaBean的命名規則
+
+===================================================================================================================================================================
+
+// 1. 使用Introspector取得BeanInfo
+BeanInfo includeParentBeanInfo = Introspector.getBeanInfo(Person.class);
+// 不內省父類別，第二參數stopClass代表從stopClass之上的類別不再內省
+BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
+
+
+=======================================================================================================
+java.beans.BeanDescriptor：對象描述器。它提供了一個JavaBean的全局信息，例如JavaBean的類型，類名等信息。
+
+BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
+BeanDescriptor beanDescriptor = beanInfo.getBeanDescriptor();
+
+Class<?> beanClass = beanDescriptor.getBeanClass();
+Class<?> customizerClass = beanDescriptor.getCustomizerClass();
+String displayName = beanDescriptor.getDisplayName();
+String name = beanDescriptor.getName();
+
+System.out.println("beanClass:" + beanClass);
+System.out.println("customizerClass:" + customizerClass);
+System.out.println("displayName:" + displayName);
+System.out.println("name:" + name);
+
+/**
+ *	輸出結果：
+ *
+ *	beanClass:class com.nobody.Person
+ *	customizerClass:null
+ *	displayName:Person
+ *	name:Person
+ */
+ 
+ 
+=======================================================================================================
+java.beans.PropertyDescriptor，即屬性描述器。描述了Java Bean的一個屬性，通過一對讀取方法。
+即PropertyDescriptor裡面封裝了JavaBean的其中一個屬性的相關信息（例如屬性名，屬性類型，get和set等方法）。
+
+/**
+ *	getName()：獲得屬性名。
+ *	getPropertyType()：獲得屬性類型。
+ *	getReadMethod()：獲得用於讀取屬性值的方法。 
+ *	getWriteMethod()：獲得用於寫入屬性值的方法。 
+ *	setReadMethod(Method readMethod)：設置用於讀取屬性值的方法。 
+ *	setWriteMethod(Method writeMethod)：設置用於寫入屬性值的方法。
+ */
+
+BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
+Person person = new Person(UUID.randomUUID().toString(), "Mr_nobody", 18);
+
+PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+	Class<?> propertyType = propertyDescriptor.getPropertyType();
+	String propertyName = propertyDescriptor.getName();
+	Method readMethod = propertyDescriptor.getReadMethod();
+	Method writeMethod = propertyDescriptor.getWriteMethod();
+	
+	System.out.println("屬性名：" + propertyName);
+    System.out.println("屬性類型：" + propertyType);
+    System.out.println("寫方法名：" + writeMethod.getName());
+    System.out.println("讀方法名：" + readMethod.getName());
+}
+ 
+ /**
+	輸出結果：
+	
+	屬性名：age
+	屬性類型：int
+	寫方法名：setAge
+	讀方法名：getAge
+	屬性值：20
+	
+	屬性名：id
+	屬性類型：class java.lang.String
+	寫方法名：setId
+	讀方法名：getId
+	屬性值：a6ccda55-c895-438e-893f-7fa448aba35a
+	
+	屬性名：name
+	屬性類型：class java.lang.String
+	寫方法名：setName
+	讀方法名：getName
+	屬性值：Mr_nobody
+ */
+ 
+ 
+=======================================================================================================
+java.beans.MethodDescriptor，即方法描述器，通過它可以獲取到類相關的方法
+ 
+BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
+MethodDescriptor[] methodDescriptors = beanInfo.getMethodDescriptors();
+
+for (MethodDescriptor methodDescriptor : methodDescriptors) {
+
+	Method method = methodDescriptor.getMethod();
+	System.out.println(method);
+	System.out.println("方法名稱：" + method.getName());
+
+	Type[] genericParameterTypes = method.getGenericParameterTypes();
+	if (genericParameterTypes != null) {
+		for (Type genericParameterType : genericParameterTypes) {
+			System.out.println("方法參數類型：" + genericParameterType.getTypeName());
+		}
+	}
+	Class<?> returnType = method.getReturnType();
+	System.out.println("方法返回類型：" + returnType.getTypeName());
+}
+
+/*
+	輸出結果：
+
+	public java.lang.String com.nobody.Person.getName()
+	方法名：getName
+	方法返回类型：java.lang.String
+
+	public void com.nobody.Person.setName(java.lang.String)
+	方法名：setName
+	方法参数类型：java.lang.String
+	方法返回类型：void
+*/
+=======================================================================================================
+簡單應用範例
+
+/*** 1. 使用Introspector設定LaraCat的laraname ***/
+
+// LaraCat.java
+public class LaraCat {
+	String laraname;
+	
+	public String getLaraname() {
+		return laraname;
+	}
+	public void setLaraname(String laraname) {
+		this.laraname = laraname;
+	}
+}
+
+// Main.java
+public class Main {
+	public static void main(String[] args) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		LaraCat targetLara = new LaraCat();
+		BeanInfo beanInfo = Introspector.getBeanInfo(LaraCat.class);
+		PropertyDescriptor[] destPropertyDescriptors = beanInfo.getPropertyDescriptors();
+		
+		for (PropertyDescriptor propertyDescriptor : destPropertyDescriptors) {
+			if("laraname".equals(propertyDescriptor.getName())) {
+				Method setLaraNameMethod = propertyDescriptor.getWriteMethod();
+				setLaraNameMethod.invoke(targetLara, "laracat from Introspector");
+			}
+		}
+		System.out.println(targetLara.laraname);
+	}
+}
+
+
+/*** Bean to Map ***/
+public static <T> Map<String, Method> getBeanPropertyGetterMap(T bean) throws IntrospectionException {
+	
+	Map<String, Method> rs = new HashMap<String, Method>();
+	BeanInfo info = Introspector.getBeanInfo(bean.getClass(), Object.class);
+	PropertyDescriptor[] propertys = info.getPropertyDescriptors();
+	
+	for (PropertyDescriptor property : propertys) {
+		String propertyName = property.getName();
+		Method getter = property.getReadMethod();
+		rs.put(propertyName, getter);
+	}
+	return rs;
+}
+
+/*** copyProperty ***/
+public static <T1, T2> void copyProperty(T1 origin, T2 dest) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	
+	BeanInfo destInfo = Introspector.getBeanInfo(dest.getClass(), Object.class);
+	Map<String, Method> getterMap = getBeanPropertyGetterMap(origin);
+	
+	for (PropertyDescriptor property : destInfo.getPropertyDescriptors()) {
+		final String destPropertyName = property.getName();
+		
+		if(getterMap.containsKey(destPropertyName)) {
+			Object originValue = getterMap.get(destPropertyName).invoke(origin);
+			Method destSetter = property.getWriteMethod();
+			destSetter.invoke(dest, originValue);
+		}
+	}
+}
+
+/*** main ***/
+public static void main(String[] args) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	LaraCat origin = new LaraCat();
+	MikaCat dest = new MikaCat();
+	origin.laraname = "122222";
+	
+	System.out.println("copyProperty after");
+	System.out.println("origin: " + origin);
+	System.out.println("dest: " + dest);
+	System.out.println();
+	copyProperty(origin, dest);
+	
+	System.out.println("copyProperty before");
+	System.out.println("origin: " + origin);
+	System.out.println("dest: " + dest);
+}
+
+// 輸出結果：
+copyProperty after
+origin: LaraCat [laraname=122222]
+dest: MikaCat [laraname=null, mikaname=null]
+
+copyProperty before
+origin: LaraCat [laraname=122222]
+dest: MikaCat [laraname=122222, mikaname=null]
+
+
+
+/* 文章範例 */
+public static <T1, T2> void copyProperties(T1 origin, T2 dest, boolean setNull,
+        String[] excludeFieldNames)
+        throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    // 获取源类的BeanInfo对象
+    BeanInfo originBeanInfo = Introspector.getBeanInfo(origin.getClass(), Object.class);
+    // 获取源类的属性描述器
+    PropertyDescriptor[] originPropertyDescriptors = originBeanInfo.getPropertyDescriptors();
+    // 获取目标类的BeanInfo对象
+    BeanInfo destBeanInfo = Introspector.getBeanInfo(dest.getClass(), Object.class);
+    // 获取目标类的属性描述器
+    PropertyDescriptor[] destPropertyDescriptors = destBeanInfo.getPropertyDescriptors();
+    for (PropertyDescriptor propertyDescriptor : destPropertyDescriptors) {
+        String propertyName = propertyDescriptor.getName();
+        // 是否需要排除的属性
+        boolean excludeField = false;
+        if (excludeFieldNames != null) {
+            for (String excludeFieldName : excludeFieldNames) {
+                if (Objects.equals(excludeFieldName, propertyName)) {
+                    excludeField = true;
+                    break;
+                }
+            }
+        }
+        if (excludeField) {
+            continue;
+        }
+        // 遍历源类的所有属性，如果存在此属性则进行拷贝
+        for (PropertyDescriptor originPropertyDescriptor : originPropertyDescriptors) {
+            String originPropertyName = originPropertyDescriptor.getName();
+            if (Objects.equals(propertyName, originPropertyName)) {
+                // 读取属性值
+                Method readMethod = originPropertyDescriptor.getReadMethod();
+                Object srcValue = readMethod.invoke(origin);
+                if (srcValue != null || setNull) {
+                    // 设置属性值
+                    Method writeMethod = propertyDescriptor.getWriteMethod();
+                    writeMethod.invoke(dest, srcValue);
+                }
+                break;
+            }
+        }
+    }
+}
+
+=======================================================================================================
+參考：
+
+大多数人不知道的Java知识 - Java内省机制
+https://zhuanlan.zhihu.com/p/359284593?utm_id=0
