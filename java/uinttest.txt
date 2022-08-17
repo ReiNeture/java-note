@@ -1,0 +1,97 @@
+========================================================================================
+JUnit Fixture:
+
+@Test        // 定義測試方法
+@BeforeEach  // 在每個 @Test 前執行
+@AfterEach   // 在每個 @Test 後執行
+@BeforeAll   // 在所有 @Test 前執行
+@AfterAll    // 在所有 @Test 後執行
+
+執行順序：
+	invokeBeforeAll(CalculatorTest.class);  // 執行 @BeforeAll
+	for (Method testMethod : findTestMethods(CalculatorTest.class)) {
+		var test = new CalculatorTest();  // 創建 @Test實例
+		invokeBeforeEach(test);  // 執行 @BeforeEach
+			invokeTestMethod(test, testMethod);  // 執行 @Test方法
+		invokeAfterEach(test);  // 執行 @AfterEach
+	}
+	invokeAfterAll(CalculatorTest.class);  // 執行 @AfterAll
+
+
+========================================================================================
+Juint4 Runner:   需要類別上用 @RunWith 標註
+
+使用 Mockito Annotation
+	@RunWith(MockitoJUnitRunner.class)
+	
+使用 Spring Ioc
+	@RunWith(SpringRunner.class)
+	@ContextConfiguration(classes = AppConfig.class)   // 指定Configuration
+	@ActiveProfiles("dev")  // 指定Profile
+	
+使用 Spring Boot
+	@RunWith(SpringRunner.class)
+	@SpringBootTest
+
+
+========================================================================================
+Juint5 Runner:   需要類別上用 @ExtendWith 標註
+
+使用 Mockito Annotation
+	@ExtendWith(MockitoExtension.class)
+
+使用 Spring Ioc
+	@ExtendWith(SpringExtension.class)
+	@ContextConfiguration(classes = AppConfig.class)   // 指定Configuration
+	@ActiveProfiles("dev")  // 指定Profile
+
+使用 Spring Boot
+	@SpringBootTest
+	
+========================================================================================
+Mockito常用標註
+
+@Mock
+	跟Mockito.mock()效果一樣，要能使用此 annotation，有兩種方式：
+	
+	方法一：
+		在測試的 class 上加上 @RunWith(MockitoJUnitRunner.class) 或是 
+		Junit5 後可改用 @ExtendWith(MockitoExtension.class)
+		
+	方法二：加上 MockitoAnnotations.initMocks()
+		@Before  // 這邊建議寫在測試執行前
+		public void initMocks() {
+			MockitoAnnotations.initMocks(this);
+		}
+		
+@MockBean
+	如果測試需要依賴於 Spring Boot 容器，就需要使用Spring Boot中的@MockBean。
+	使用這個方式可以將真正的 Java Bean 透過模擬的方式產生在 IOC Container。
+	// 使標註是來自spring boot
+	
+	
+@InjectMock
+	當你想要測試的 service 有太多的 dependency classes，可以使用 @InjectMock 標註，
+	但要注意：依賴的 classes 必須要被標註為 @Mock 
+	
+	@Mock private UserService userService;
+    @Mock private AddressService addressService;
+    @InjectMocks private ExampleService exampleService;
+	
+	// ExampleService 內有依賴 UserService, AddressService
+	
+	
+	
+	
+	
+	
+	
+========================================================================================
+參考
+
+Java Unit Test — Mockito
+https://vivifish.medium.com/java-%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6%E5%B7%A5%E5%85%B7-mockito-e5f0ce93579d
+
+廖雪峰官方網站 單元測試
+https://www.liaoxuefeng.com/wiki/1252599548343744/1255945269146912
+	
