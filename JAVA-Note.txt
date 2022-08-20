@@ -257,3 +257,21 @@ var feature = (function() {
 
 feature.publicThing // 公開部份的存取
 feature.sayPrivateThing() // 透過公開的API來存取私有的變數
+
+
+==================================================================================== try-with-resource
+
+HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+try (AutoCloseable conc = () -> con.disconnect()) {
+    // add request headers
+    try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+        wr.writeBytes(queryString);
+    }
+    int responseCode = con.getResponseCode();
+    try (InputStream ins = responseCode >= 400 ? con.getErrorStream() : con.getInputStream();
+        BufferedReader in = new BufferedReader(new InputStreamReader(ins))) {
+        // receive response
+    }
+}
+
+// () -> con.disconnect() is a lambda expression which execute con.disconnect() at finally stage of the try statement.
