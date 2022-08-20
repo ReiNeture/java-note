@@ -49,7 +49,7 @@ Juint5 Runner:   需要類別上用 @ExtendWith 標註
 	@SpringBootTest
 	
 ========================================================================================
-Mockito常用標註
+Mockito：
 
 @Mock
 	跟Mockito.mock()效果一樣，要能使用此 annotation，有兩種方式：
@@ -77,15 +77,81 @@ Mockito常用標註
 	@Mock private UserService userService;
     @Mock private AddressService addressService;
     @InjectMocks private ExampleService exampleService;
-	
 	// ExampleService 內有依賴 UserService, AddressService
+
+
+Mockito 使用範例:
+
+	@Mock FaRepository reposit;
+	@Mock Connector sender;
+	@InjectMocks QueryFaTime tester;
+
+	when(sender.doPost(any(), anyString()))
+				.thenReturn(Optional.of(mockContext.fatimeMockJson()));
+
+	verify(reposit).storageQueryFaTree(result);
+	verify(reposit, times(3)).storageQueryFaTree(result); // 驗證次數
 	
+========================================================================================
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+========================================================================================
+hamcrest matchers：
+
+Core
+	anything - always matches, useful if you don't care what the object under test is
+	describedAs - decorator to adding custom failure description
+	is - decorator to improve readability - see "Sugar", below
 	
+Logical
+	allOf - matches if all matchers match, short circuits (like Java &&)
+	anyOf - matches if any matchers match, short circuits (like Java ||)
+	not - matches if the wrapped matcher doesn't match and vice versa
 	
+Object
+	equalTo - test object equality using Object.equals
+	hasToString - test Object.toString
+	instanceOf, isCompatibleType - test type
+	notNullValue, nullValue - test for null
+	sameInstance - test object identity
 	
+Beans
+	hasProperty - test JavaBeans properties
 	
+Collections
+	array - test an array's elements against an array of matchers
+	hasEntry, hasKey, hasValue - test a map contains an entry, key or value
+	hasItem, hasItems - test a collection contains elements
+	hasItemInArray - test an array contains an element
 	
+Number
+	closeTo - test floating point values are close to a given value
+	greaterThan, greaterThanOrEqualTo, lessThan, lessThanOrEqualTo - test ordering
 	
+Text
+	equalToIgnoringCase - test string equality ignoring case
+	equalToIgnoringWhiteSpace - test string equality ignoring differences in runs of whitespace
+	containsString, endsWith, startsWith - test string matching
+
+
+Hamcrest 簡單範例：
+
+	import static org.hamcrest.MatcherAssert.assertThat;
+	import static org.hamcrest.CoreMatchers.*;
+
+	assertThat(result.size(), equalTo(2));
+	assertThat(getOnlyElement(result), instanceOf(FAheader.class));
+	assertThat(Arrays.asList("A", "B", "C"), hasItem("C"));
+
+
 ========================================================================================
 參考
 
@@ -94,4 +160,7 @@ https://vivifish.medium.com/java-%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6%E5%B7%A5%E
 
 廖雪峰官方網站 單元測試
 https://www.liaoxuefeng.com/wiki/1252599548343744/1255945269146912
+
+hamcrest - Tutorial.wiki
+https://code.google.com/archive/p/hamcrest/wikis/Tutorial.wiki
 	
