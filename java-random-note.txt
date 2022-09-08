@@ -9,3 +9,55 @@
 // HTTP Header Authorization的組法,
 	String AUTHOR = account + ":" + password;
 	String Authorization = "Basic " + Base64.getEncoder().encodeToString(AUTHOR .getBytes());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+============================================================================================================================================================
+// ScheduledExecutorService cancel task inside my task
+// ref : https://stackoverflow.com/questions/70230742/scheduledexecutorservice-cancel-task-inside-my-task
+
+public static void main(String[] args) {
+    final CompletableFuture<ScheduledFuture<?>> cancellablePeriodicTask = new CompletableFuture<>();
+    final ScheduledFuture<?> cancellable = scheduler.scheduleAtFixedRate(() -> {
+        performHttpCallAndScheduleAgainIfNeeded(cancellablePeriodicTask);
+    }, 1, 60, TimeUnit.SECONDS);
+    cancellablePeriodicTask.complete(cancellable);
+}
+
+private static void performHttpCallAndScheduleAgainIfNeeded(CompletableFuture<ScheduledFuture<?>> cancellable) {
+    boolean callWasOk = performHttpCall();
+    if (callWasOk) {
+        // here you cancel
+        cancellable.whenComplete((scheduledFuture, throwable) -> {
+          if (throwable == null) {  
+              scheduledFuture.cancel(true);
+          }
+        });
+    }
+
+    // call was not ok here, nothing to do since the scheduler will call this again.
+}
+
+private static boolean performHttpCall() {
+    // do whatever you need to do here...
+}
