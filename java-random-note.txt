@@ -11,6 +11,12 @@
 	String Authorization = "Basic " + Base64.getEncoder().encodeToString(AUTHOR .getBytes());
 
 
+// 取得.java檔同路徑下的檔案, 並轉換整個文件成String
+try(InputStream is = Logs1718Task.class.getResourceAsStream("FindLogsFromMase.sql")) {
+	String sql = new BufferedReader(new InputStreamReader(is))
+			.lines()
+			.collect(Collectors.joining(""));
+	return sql;
 
 
 
