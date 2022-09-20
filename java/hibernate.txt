@@ -1,0 +1,29 @@
+////// HQL普通參數綁定   ※優先考慮按名字綁定的方式。
+
+// (1) 按參數的名字進行綁定
+Query query = session.createQuery("from Customer as c where c.name =:customerName");
+query.setString("customerName", name);
+
+// (2) 按參數位置綁定
+Query query = session.createQuery("from Customer as c where c.name = ? and c.id = ?");
+query.setString(0 , name);
+query.setString(1 , id);
+
+////// 特殊參數綁定 
+
+//（1）setEntity()： 把參數與一個持久化類的實例綁定。例如：以下setEntity()方法把“customer”命名參數與一個Customer對象綁定 
+session.createQuery("from Order o where o.customer = :customer").setEntity("customer", customer).list();
+
+// (2) setParameter()方法：绑定任意类型的参数
+Query query = session.createQuery("from Order o where o.id=:id and o.orderNumber like :orderNumber");
+query.setParameter("id", 1);
+// query.setParameter(" orderNumber",orderNumber,Hibernate.STRING);  // hibernate 3.0的写法。
+query.setParameter(" orderNumber",orderNumber, StringType.INSTANCE); // hibernate 4.2的写法
+
+// (3)setProperties() 方法：用于把参数名称与一个对象的属性值绑定，如：
+Customer c = new Customer();
+c.setName("Tom"); 
+c.setAge(20);
+Query query = session.createQuery("from Customer as c where c.name = :name and c.age = :age")
+query.setProperties(c);
+
