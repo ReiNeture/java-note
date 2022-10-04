@@ -1,0 +1,77 @@
+Python Module
+----------------------------------------------------------------------------------------------------------------------
+一個.py檔案就是一個python模塊，
+例子，一个abc.py的文件就是一个名字叫abc的模块，一个xyz.py的文件就是一个名字叫xyz的模块。
+
+#FooClass.py
+class Foo():
+    def __init__(self, name):
+        self.name = name
+    def bar(self):
+        print(self.name)
+
+#const.py
+name1 = "pig"
+name2 = "cccccc"
+name3 = "Tea"
+
+#main.py
+from FooClass import * # from FooClass import Foo
+import const
+        
+a = Foo('a name')
+a.bar()
+
+print( const.name1 )
+print( const.name2 )
+print( const.name3 )
+
+
+python main.py 結果：
+
+a name
+pig
+cccccc
+Tea
+-------------------------------------------------------------
+
+目錄結構：
+xxxx
+├─ main.py
+├─ const.py
+└─ FooClass.py
+
+
+--------------------------------------------------------------
+一些內建模塊的使用範例：
+
+# 原始碼：Lib/decimal.py
+>>> from decimal import *
+>>> getcontext().prec = 6
+>>> Decimal(1) / Decimal(7)
+Decimal('0.142857')
+>>> getcontext().prec = 28
+>>> Decimal(1) / Decimal(7)
+>>> Decimal('0.1428571428571428571428571429')
+
+# 原始碼：Lib/string.py
+>>> import string
+>>> string.ascii_letters
+'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' #字符串常量
+>>> string.digits
+'0123456789' #字符串常量
+
+# math
+>>> import math
+>>> math.fabs(-1234)
+1234.0
+>>> math.factorial(7)
+5040
+
+# datetime
+>>> from datetime import datetime
+>>> now = datetime.now() # 获取当前datetime，此為classmethod無須實例，回傳為datetime類別
+>>> print(now)
+2022-10-04 18:02:05.464170
+>>> now.weekday() # 實例方法，回傳星期幾
+1
