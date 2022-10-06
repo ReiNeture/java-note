@@ -1,0 +1,12 @@
+// JAVA Time 轉換 Timestamp
+	Timestamp timestamp = Timestamp.valueOf(localDate.atStartOfDay());
+	Timestamp timestamp = Timestamp.valueOf(localDateTime);
+
+// 回傳LocalDateTime 時間為 2022-08-30T23:59:59.999999999
+	LocalDate realYesterDay = LocalDate.now().minusDays(1);
+	realYesterDay.atTime(LocalTime.MAX)
+
+// 格式化
+LocalDate localDate = LocalDate.now();
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+String formattedString = localDate.format(formatter);
