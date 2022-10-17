@@ -1,3 +1,9 @@
+// List to String (List需為 Iterable<? extends CharSequence> )
+String listString = String.join(", ", list);
+// List 裝的不是字串類型可用Stram
+String listString = list.stream().map(Object::toString)
+                        .collect(Collectors.joining(", "));
+
 // HTTP Header Authorization的組法,
 	String AUTHOR = account + ":" + password;
 	String Authorization = "Basic " + Base64.getEncoder().encodeToString(AUTHOR .getBytes());
