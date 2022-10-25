@@ -2,11 +2,19 @@
 	Timestamp timestamp = Timestamp.valueOf(localDate.atStartOfDay());
 	Timestamp timestamp = Timestamp.valueOf(localDateTime);
 
+
 // 回傳LocalDateTime 時間為 2022-08-30T23:59:59.999999999
 	LocalDate realYesterDay = LocalDate.now().minusDays(1);
 	realYesterDay.atTime(LocalTime.MAX)
 
-// 格式化
-LocalDate localDate = LocalDate.now();
-DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-String formattedString = localDate.format(formatter);
+
+// 格式化 By DateTimeFormatter 
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	LocalDate toStringDate = LocalDate.now();
+	String formattedString = localDate.format(formatter);
+	LocalDate fromStringDate = LocalDate.parse(formattedString, formatter);
+
+
+// 如果字串是ISO_LOCAL_DATE格式 可直接解析成LocalDate
+	String date = "2016-08-16";
+	LocalDate localDate = LocalDate.parse(date); //default, ISO_LOCAL_DATE
